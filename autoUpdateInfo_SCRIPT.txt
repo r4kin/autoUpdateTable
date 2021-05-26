@@ -1,0 +1,80 @@
+//Rakin Mohammed 2021/01/28 autoupdate script
+//import schedule               #pip install schedule  
+
+import csv			
+import requests                 #pip install requests
+import time		        #pip install lxml
+from bs4 import BeautifulSoup   #pip install bs4
+from datetime import date
+
+#fill in salesforce login information
+payload = {
+    'pw':'password'
+    'un':'username'
+}
+
+
+def script(data):
+        #initialize csv file
+	today = date.today()
+	dateString = today.strftime("%m_%d_%Y")
+	
+        outfile = open("table_data_" + dateString + ".csv","w", newline='')
+        writer = csv.writer(outfile)
+	
+        #URLs of interest
+        logInUrl = 'https://login.salesforce.com/'
+        destinationUrl = 'https://york.my.salesforce.com/00DG0000000kvNa?retURL=%2Fui%2Fsetup%2FSetup%3Fsetupid%3DCompanyProfile&setupid=CompanyProfileInfo'
+        #change destinationURL to the link of the Company Information webpage in YOUR sandbox or production environment
+        
+        #create login session and post login information
+        s = requests.session()
+        response = s.post(logInUrl, data=payload)
+        #print(response.status_code)    #Returns 200, Success
+
+        #record response from login page, and navigate to redirection link
+        redirectUrl = response.url
+        r = s.get(redirectUrl) 
+        #print(r.status_code)           #Returns 200, Success
+        #print(r.content)               #Returns protected HTML of redirect link
+
+        #session now signed in, can open target url
+        x = s.get(destinationUrl)
+        #print(x.content)               #Returns HTML of Company Information page
+        #print(x.status_code)           #Returns 200, Success
+
+        #save HTML of company information page as a local file
+        file = open("writeHtml.html","w")
+        file.write(x.text)
+
+        #parse through HTML to locate User License table
+        soup = BeautifulSoup(open('writeHtml.html'), features = 'lxml')
+        div = soup.find('div', attrs={'id':'00DG0000000kvNa_RelatedUserLicenseList_body'})
+        table = div.find('table')
+        #print(table.prettify())        #Returns User License table in console
+
+        #parse through table HTML and write data to csv file
+        tab_data = [[item.text for item in row_data.select("th,td")]
+                for row_data in table.select("tr")]
+        for data in tab_data:
+                writer.writerow(data)
+                print(' '.join(data))
+	
+        #close csv file
+
+        file.close()
+
+script(payload)                          #Function call
+
+
+
+
+
+
+
+#scheduling in python, perfectly functional but program must stay open
+#schedule.every(50).seconds.do(script, payload)         				#Test call for scheduling function
+#schedule.every().friday.at("12:00").do(script, payload)#Weekly schedule call, can drop ".at("12:00")"
+#while 1:                                               				#Loop call
+#    schedule.run_pending()
+#    time.sleep(1)
