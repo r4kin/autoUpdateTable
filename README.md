@@ -1,5 +1,6 @@
 # autoUpdateTable
 **READ ME**
+
 Introduction -------------
 
 The Python script, "autoUpdateInfo_SCRIPT.py", automatically updates the number of User Licenses in an Excel spreadsheet as it is changed in 
@@ -13,6 +14,7 @@ Requirements--------------
 - Windows Powershell/ CMD
 
 Steps---------------------
+
 1) Download the latest version of Python from https://www.python.org/downloads, and install to a custom folder (ex. C:\My_Python)
 2) Open "Scripts" file (where pip files are present)
 3) Open Windows Powershell or Command Prompt and enter the following code segments seqeuntially: 
@@ -23,6 +25,7 @@ Steps---------------------
 7) Open CMD from Python file directory > c:\\My_Python: execute command autoupdateScript.py
 
 To Use Code----------------
+
 Note: The CSV file is saved in the same file directory as c:\\My_Python
 • In the payload object in the script; change "password" to your Salesforce password, change "username" to your Salesforce username
 • The string "logInUrl" must be changed to the url of the sign-in page of your Sandbox or Production Environment. Defaulted to Salesforce production sign-on page
