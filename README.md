@@ -34,5 +34,6 @@ Note: The CSV file is saved in the same file directory as c:\\My_Python
 	- To locate the HTML id of a table in Salesforce, right click the web page and select "view page source". Then use CRTL-F and search up "User License". Copy and paste the HTML id most similar to "RelatedUserLicenseList_body", into the script. 
 
 Explanation----------------
+
 Uses "datetime" library to retrieve the current date, which is used to create a dated filename. Uses the "requests" library to create a session with Salesforce to login using your log-in information.
 Parses through webpage HTML to locate table using "beautiful soup" library, and iterates through table using known HTML table tags to retrieve table data and output to csv file.  
